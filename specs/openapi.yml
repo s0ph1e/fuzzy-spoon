@@ -1,0 +1,25 @@
+openapi: 3.0.0
+info:
+  title: Records API specs
+  description: Records API specs
+  version: 0.0.1
+
+paths:
+  /:
+    post:
+      summary: Returns a list of records
+      description: Returns a list of records based on filters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: string
+              required:
+                - startDates
+      responses:
+        '200':
+          description: Response
