@@ -1,18 +1,18 @@
 import assert from 'assert';
-
-function validateFilters(filters) {
-
-}
+import { getSuccessResponse } from './responseUtil.mjs';
 
 function createRecordsRoutes({app, recordsService} = {}) {
 	assert(app, 'app should be provided to createRecordsRoutes');
 	assert(recordsService, 'recordsService should be provided to createRecordsRoutes');
 
-	app.post('/', async (req, res) => {
+	app.post('/', async (req, res, next) => {
 		const filters = req.body;
-
-		const records = await recordsService.getRecords({filters});
-		res.json({success: true, records});
+		try {
+			const records = await recordsService.getRecords({filters});
+			res.json(getSuccessResponse({records}));
+		} catch (err) {
+			next(err);
+		}
 	});
 }
 

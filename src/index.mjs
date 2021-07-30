@@ -19,7 +19,7 @@ async function main() {
 	app.use(express.json());
 	app.use(
 		OpenApiValidator.middleware({
-			apiSpec: './specs/openapi.yml',
+			apiSpec: './src/specs/openapi.yml',
 			validateRequests: true
 		}),
 	);

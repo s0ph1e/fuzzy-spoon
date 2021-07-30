@@ -2,7 +2,7 @@
   "name": "fuzzy-spoon",
   "version": "0.0.0",
   "description": "Simple API in mode.js connected to MongoDB",
-  "main": "index.mjs",
+  "main": "src/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
