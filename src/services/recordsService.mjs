@@ -11,9 +11,7 @@ function validateFilters({startDate, endDate, minCount, maxCount} = {}) {
 	}
 }
 
-function getRecordsFromDb({db, filters = {}} = {}) {
-	validateFilters(filters);
-
+function getAggregateSteps(filters) {
 	const dateQuery = {};
 	if (filters.startDate) {
 		dateQuery.createdAt = dateQuery.createdAt || {};
@@ -34,17 +32,22 @@ function getRecordsFromDb({db, filters = {}} = {}) {
 		countQuery.totalCount.$lt = filters.maxCount
 	}
 
-	const aggregateStages = [
+	return [
 		{$match: dateQuery},
 		{$project: {
-			_id: 0,
-			key: 1,
-			createdAt: 1,
-			totalCount: {$sum: "$counts"}
-		}},
+				_id: 0,
+				key: 1,
+				createdAt: 1,
+				totalCount: {$sum: "$counts"}
+			}},
 		{$match: countQuery}
 	];
+}
 
+function getRecordsFromDb({db, filters = {}} = {}) {
+	validateFilters(filters);
+
+	const aggregateStages = getAggregateSteps(filters)
 	/*
 	 If we have large amount of records - .toArray() may be not an optimal solution
 	 because it may create performance problems
@@ -62,3 +65,7 @@ function createRecordService({db} = {}) {
 }
 
 export default createRecordService;
+export {
+	getAggregateSteps,
+	validateFilters
+}
