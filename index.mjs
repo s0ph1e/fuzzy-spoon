@@ -25,8 +25,8 @@ async function main() {
 	);
 	createRecordsRoutes({app, recordsService});
 
-	app.use((err, req, res) => {
-		// return http status 200 because we have status in response body according to requirements
+	app.use((err, req, res, next) => {
+		// return http status 200 because we have status in res.body according to requirements
 		// usually we want to send non-successful http code in case of error (e.g. 400 or 500 instead of 200)
 		const message = `Failed to process the request. Reason: ${err.message}`;
 		res.status(200).json(getErrorResponse(message));

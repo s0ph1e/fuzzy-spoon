@@ -18,8 +18,14 @@ paths:
               properties:
                 startDate:
                   type: string
-              required:
-                - startDates
+                  format: date
+                endDate:
+                  type: string
+                  format: date
+                minCount:
+                  type: number
+                maxCount:
+                  type: number
       responses:
         '200':
           description: Response
