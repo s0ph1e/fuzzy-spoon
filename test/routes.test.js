@@ -1,15 +1,41 @@
-import express from "express";
+import express from 'express';
 import request from 'supertest';
-import createRoutes from "../src/routes/index.mjs";
+import mockgo from 'mockgo';
+import createRoutes from '../src/routes/index.mjs';
+import createRecordService from '../src/services/recordsService.mjs';
 
 const app = express();
-const routes = createRoutes({recordsService: null});
+const db = await mockgo.getConnection();
+const routes = createRoutes({recordsService: createRecordService({db})});
 app.use('/', routes);
 
 describe('Testing / route', () => {
+	beforeAll(async () => {
+		await db.collection('records').insertMany([
+			{
+				key:'ektIqjpb',
+				value:'gAzGrAxHsyGP',
+				createdAt: new Date('2015-06-03'),
+				counts: [711, 758, 743, 389, 349, 291]
+			},
+			{
+				key:'knsjfkjfre',
+				value:'nkJKnKnmmjgyhfgc',
+				createdAt: new Date('2020-07-08'),
+				counts: [6, 18, 55]
+			},
+			{
+				key:'mdkrmdwmke',
+				value:'lmknPIOJKrfct',
+				createdAt: new Date('2020-11-08'),
+				counts: [227, 145]
+			}
+		]);
+	});
+	afterAll(() => mockgo.shutDown())
 
 	describe('Validation errors', () => {
-		it("POST / with wrong startDate, endDate formats - should return error", async () => {
+		it('POST / with wrong startDate, endDate formats - should return error', async () => {
 			const { body } = await request(app)
 				.post('/')
 				.set('Content-type', 'application/json')
@@ -24,7 +50,7 @@ describe('Testing / route', () => {
 			});
 		});
 
-		it("POST / with wrong minCount, maxCount formats - should return error", async () => {
+		it('POST / with wrong minCount, maxCount formats - should return error', async () => {
 			const { body } = await request(app)
 				.post('/')
 				.set('Content-type', 'application/json')
@@ -39,7 +65,7 @@ describe('Testing / route', () => {
 			});
 		});
 
-		xit("POST / with wrong startDate > endDate - should return error", async () => {
+		it('POST / with startDate > endDate - should return error', async () => {
 			const { body } = await request(app)
 				.post('/')
 				.set('Content-type', 'application/json')
@@ -50,10 +76,79 @@ describe('Testing / route', () => {
 
 			expect(body).toEqual({
 				code: 1,
-				msg: 'Failed to process the request. Reason: request.body.minCount should be number, request.body.maxCount should be number',
+				msg: 'Failed to process the request. Reason: startDate should be less than endDate',
+			});
+		});
+
+		it('POST / with wrong minCount > maxCount - should return error', async () => {
+			const { body } = await request(app)
+				.post('/')
+				.set('Content-type', 'application/json')
+				.send({
+					minCount: 100,
+					maxCount: 2,
+				});
+
+			expect(body).toEqual({
+				code: 1,
+				msg: 'Failed to process the request. Reason: minCount should be less that maxCount',
 			});
 		});
 	});
 
+	describe('Happy path - return records list', () => {
+		it('POST / without filters - return all records', async () => {
+			const { body } = await request(app)
+				.post('/')
+				.set('Content-type', 'application/json')
+				.send({});
+
+			expect(body).toEqual({
+				code: 0,
+				msg: 'success',
+				records: [
+					{
+						createdAt: '2015-06-03T00:00:00.000Z',
+						key: 'ektIqjpb',
+						totalCount: 3241
+					},
+					{
+						createdAt: '2020-07-08T00:00:00.000Z',
+						key: 'knsjfkjfre',
+						totalCount: 79
+					},
+					{
+						createdAt: '2020-11-08T00:00:00.000Z',
+						key: 'mdkrmdwmke',
+						totalCount: 372
+					}
+				]
+			});
+		});
+
+		it('POST / with all filters - return filtered records', async () => {
+			const { body } = await request(app)
+				.post('/')
+				.set('Content-type', 'application/json')
+				.send({
+					startDate: '2020-01-01',
+					endDate: '2021-01-01',
+					minCount: 0,
+					maxCount: 100
+				});
+
+			expect(body).toEqual({
+				code: 0,
+				msg: 'success',
+				records: [
+					{
+						createdAt: '2020-07-08T00:00:00.000Z',
+						key: 'knsjfkjfre',
+						totalCount: 79
+					}
+				]
+			});
+		});
+	});
 });
 

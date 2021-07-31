@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "jest": "^27.0.6",
+    "mockgo": "^2.0.1",
     "supertest": "^6.1.4"
   },
   "engines": {
