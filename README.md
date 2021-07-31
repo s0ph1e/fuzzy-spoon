@@ -10,9 +10,12 @@ API with a single endpoint that fetches the data from the MongoDB collection and
 
 ### Install and run
 
-* `npm i`
+* `npm i` - install dependencies
 * set environment variables `PORT` and `MONGODB_CONNECTION_URL`
-* `npm start` - run both client and server
+* `npm start` - run the server
+
+To run the tests:
+* `npm test`
 
 ### API
 
