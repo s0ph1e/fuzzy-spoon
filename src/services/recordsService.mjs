@@ -1,13 +1,14 @@
 import assert from 'assert';
+import {InvalidMinCountError, InvalidStartDateError} from '../errors.js';
 
 const COLLECTION_NAME = 'records';
 
 function validateFilters({startDate, endDate, minCount, maxCount} = {}) {
 	if (startDate && endDate && startDate >= endDate) {
-		throw new Error('startDate should be less than endDate');
+		throw new InvalidStartDateError('startDate should be less than endDate');
 	}
 	if (minCount && maxCount && minCount >= maxCount) {
-		throw new Error('minCount should be less that maxCount');
+		throw new InvalidMinCountError('minCount should be less that maxCount');
 	}
 }
 

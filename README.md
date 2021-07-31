@@ -35,17 +35,15 @@ Sample:
 
 #### Response Payload
 Response payload has 3 main fields:
-- `code` is for status of the request. 0 means success. Other values may be used
-for errors that you define.
-- `msg` is for description of the code. It contains “success” for successful
-requests. For unsuccessful requests it provides explanatory messages.
+- `code` is for status of the request. 0 means success. See more details about error codes below
+- `msg` is for description of the code. It contains "success" for successful requests. For unsuccessful requests it provides explanatory messages.
 - `records` will include all the filtered items according to the request. This array should include items of `key`, `createdAt` and `totalCount` which is the sum of the `counts` array in the document.
 
 Sample:
 ```javascript
 {
   "code": 0, 
-  "msg": "Success", 
+  "msg": "success", 
   "records": [
     {
       "key":"TAKwGc6Jr4i8Z487", 
@@ -59,3 +57,11 @@ Sample:
   ]
 }
 ```
+
+##### Error response examples
+
+- `{"code": 1, "msg": "system error"}` - general system error, all unexpected error will have this response  
+- `{"code": 2, "msg": "request.body.minCount should be number"}` - request payload validation error, `msg` will contain the details. Check you send request payload using [expected format](#request-payload)
+- `{"code": 3, "msg": "startDate should be less than endDate"}` - error with `startDate` / `endDate`
+- `{"code": 4, "msg": "minCount should be less that maxCount"}` - error with `minCount` / `maxCount`
+

@@ -45,8 +45,8 @@ describe('Testing / route', () => {
 				});
 
 			expect(body).toEqual({
-				code: 1,
-				msg: 'Failed to process the request. Reason: request.body.startDate should match format "date", request.body.endDate should match format "date"',
+				code: 2,
+				msg: 'request.body.startDate should match format "date", request.body.endDate should match format "date"',
 			});
 		});
 
@@ -60,8 +60,8 @@ describe('Testing / route', () => {
 				});
 
 			expect(body).toEqual({
-				code: 1,
-				msg: 'Failed to process the request. Reason: request.body.minCount should be number, request.body.maxCount should be number',
+				code: 2,
+				msg: 'request.body.minCount should be number, request.body.maxCount should be number',
 			});
 		});
 
@@ -75,8 +75,8 @@ describe('Testing / route', () => {
 				});
 
 			expect(body).toEqual({
-				code: 1,
-				msg: 'Failed to process the request. Reason: startDate should be less than endDate',
+				code: 3,
+				msg: 'startDate should be less than endDate',
 			});
 		});
 
@@ -90,8 +90,8 @@ describe('Testing / route', () => {
 				});
 
 			expect(body).toEqual({
-				code: 1,
-				msg: 'Failed to process the request. Reason: minCount should be less that maxCount',
+				code: 4,
+				msg: 'minCount should be less that maxCount',
 			});
 		});
 	});
