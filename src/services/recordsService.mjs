@@ -11,6 +11,10 @@ function validateFilters({startDate, endDate, minCount, maxCount} = {}) {
 	}
 }
 
+/*
+In this function I assume that all filters are optional
+If all of them (startDate, endDate, minCount, maxCount) are required - we can simplify the code
+*/
 function getAggregateSteps(filters) {
 	const dateQuery = {};
 	if (filters.startDate) {
@@ -38,7 +42,7 @@ function getAggregateSteps(filters) {
 				_id: 0,
 				key: 1,
 				createdAt: 1,
-				totalCount: {$sum: "$counts"}
+				totalCount: {$sum: '$counts'}
 			}},
 		{$match: countQuery}
 	];
@@ -65,6 +69,7 @@ function createRecordService({db} = {}) {
 }
 
 export default createRecordService;
+// we can export this functions to allow easy unit-testing
 export {
 	getAggregateSteps,
 	validateFilters

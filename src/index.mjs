@@ -1,12 +1,12 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
 import createRecordService from './services/recordsService.mjs';
 import createRoutes from './routes/index.mjs';
-
-const config = dotenv.config()?.parsed;
+import config from './config.mjs';
 
 async function main() {
+	console.log('Staring app with config', config);
+
 	const mongoClient = new MongoClient(config.MONGODB_CONNECTION_URL);
 	await mongoClient.connect();
 	const db = mongoClient.db();
@@ -17,7 +17,7 @@ async function main() {
 	const routes = createRoutes({recordsService});
 	app.use('/', routes);
 
-	const port = config?.PORT ?? 3000;
+	const port = config.PORT;
 	app.listen(port, () => console.log(`App is listening on port ${port}`));
 }
 

@@ -26,6 +26,11 @@ paths:
                   type: number
                 maxCount:
                   type: number
+#              required:
+#                - startDate
+#                - endDate
+#                - minCount
+#                - maxCount
       responses:
         '200':
           description: Response
